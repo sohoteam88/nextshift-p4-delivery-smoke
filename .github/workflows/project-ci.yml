@@ -1,0 +1,26 @@
+name: P4 product CI
+on:
+  push:
+    branches: [main, 'autopilot/**', 'setup/**']
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: autopilot-project-ci
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Fetch exact public commit and run product tests
+        env:
+          CI_SHA: ${{ github.sha }}
+          CI_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "$CI_REPOSITORY" = 'sohoteam88/nextshift-p4-delivery-smoke'
+          git init -q source
+          git -C source remote add origin "https://github.com/$CI_REPOSITORY.git"
+          git -C source fetch --depth=1 origin "$CI_SHA"
+          git -C source checkout --detach FETCH_HEAD
+          test "$(git -C source rev-parse HEAD)" = "$CI_SHA"
+          cd source
+          python3 -B -m unittest discover -s tests -v
