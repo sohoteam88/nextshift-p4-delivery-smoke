@@ -1,5 +1,5 @@
 import unittest
-from src.operations import add, multiply
+from src.operations import add, multiply, subtract
 
 class OperationsTests(unittest.TestCase):
     def test_add(self):
@@ -23,3 +23,23 @@ class OperationsTests(unittest.TestCase):
         for a, b, expected in cases:
             with self.subTest(a=a, b=b):
                 self.assertAlmostEqual(multiply(a, b), expected)
+
+    def test_subtract(self):
+        cases = [
+            (5, 3, 2),
+            (3, 5, -2),
+            (-5, 3, -8),
+            (5, -3, 8),
+            (-5, -3, -2),
+            (0, 5, -5),
+            (5, 0, 5),
+            (0, 0, 0),
+            (5, 5, 0),
+            (2.5, 1.25, 1.25),
+            (-0.5, 0.25, -0.75),
+            (0.5, -0.25, 0.75),
+            (0.3, 0.1, 0.2),
+        ]
+        for a, b, expected in cases:
+            with self.subTest(a=a, b=b):
+                self.assertAlmostEqual(subtract(a, b), expected)
